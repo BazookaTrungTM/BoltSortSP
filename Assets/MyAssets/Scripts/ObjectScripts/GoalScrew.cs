@@ -29,8 +29,8 @@ public class GoalScrew : MonoBehaviour
     private int _closeTrigger = Animator.StringToHash("Close");
     private int _openTrigger = Animator.StringToHash("Open");
     private int _baseColor = Shader.PropertyToID("_BaseColor");
-    private int _metalic = Shader.PropertyToID("_Metallic");
-    private int _smoothness = Shader.PropertyToID("_Smoothness");
+    // private int _metalic = Shader.PropertyToID("_Metallic");
+    // private int _smoothness = Shader.PropertyToID("_Smoothness");
 
     public void Init(bool isRecycle)
     {
@@ -84,13 +84,13 @@ public class GoalScrew : MonoBehaviour
         colorRenderer.materials[0].DOColor(Factory.Instance.GetColorNut(color), _baseColor, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
         if (color == ColorType.None)
         {
-            colorRenderer.materials[0].DOFloat(0.924f, _metalic, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
-            colorRenderer.materials[0].DOFloat(0.576f, _smoothness, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
+            // colorRenderer.materials[0].DOFloat(0.924f, _metalic, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
+            // colorRenderer.materials[0].DOFloat(0.576f, _smoothness, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
         }
         else
         {
-            colorRenderer.materials[0].DOFloat(0.8f, _metalic, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
-            colorRenderer.materials[0].DOFloat(0.4f, _smoothness, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
+            // colorRenderer.materials[0].DOFloat(0.8f, _metalic, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
+            // colorRenderer.materials[0].DOFloat(0.4f, _smoothness, isInit ? 0 : 0.3f).SetEase(Ease.InQuad);
         }
         //colorRenderer.material = mat;
     }
@@ -165,8 +165,8 @@ public class GoalScrew : MonoBehaviour
         if (LevelManager.Instance.currentGoal.Contains(this))
             LevelManager.Instance.currentGoal.Remove(this);
         colorRenderer.materials[0].DOColor(Factory.Instance.GetColorNut(color), _baseColor, 0).SetEase(Ease.InQuad);
-        colorRenderer.materials[0].DOFloat(0.95f, _metalic, 0).SetEase(Ease.InQuad);
-        colorRenderer.materials[0].DOFloat(0.2f, _smoothness, 0).SetEase(Ease.InQuad);
+        // colorRenderer.materials[0].DOFloat(0.95f, _metalic, 0).SetEase(Ease.InQuad);
+        // colorRenderer.materials[0].DOFloat(0.2f, _smoothness, 0).SetEase(Ease.InQuad);
         Factory.Instance.ReturnGoalScrewToPool(type, gameObject);
     }
     public void OpenFillBoosterMode()
