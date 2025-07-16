@@ -1,0 +1,10 @@
+/Library
+/Temp
+/.vscode
+*.csproj
+*.sln
+/Logs
+/LunaTemp
+/UserSettings
+/obj
+luna.json
