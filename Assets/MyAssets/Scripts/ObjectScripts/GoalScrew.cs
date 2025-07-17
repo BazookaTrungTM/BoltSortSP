@@ -47,9 +47,14 @@ public class GoalScrew : MonoBehaviour
         {
             animator.SetTrigger(_openTrigger);
             DOVirtual.DelayedCall(0, () => animator.enabled = false);
+            Debug.LogError("_openTrigger");
         }
         else
+        {
+            Debug.LogError("_openTrigger 2");
             animator.enabled = false;
+
+        }
 
         //AnimOpen();
     }
@@ -123,7 +128,9 @@ public class GoalScrew : MonoBehaviour
         if (index + 1 == size && !isRunEffCloseScrew)
         {
             isRunEffCloseScrew = true;
-            StartCoroutine(Event_PlayScrewCloseEff());
+            Debug.LogError("SortNutPos");
+
+            Event_PlayScrewCloseEff();
         }
         Vector3 nutPos = new Vector3(0, index * delta, 0);
         nut.SortPos(nutPos, () =>
@@ -137,31 +144,63 @@ public class GoalScrew : MonoBehaviour
             CheckDoneGoal(index);
         });
     }
+
+    public bool isFirst = false;
     public void CheckDoneGoal(int indexInList)
     {
         if (indexInList + 1 == size)
         {
             // Debug.LogError("CheckDoneGoal");
-            LevelManager.Instance.CheckOpenTowel(color);
-            // Debug.LogError("CheckDoneGoal1");
-            LevelManager.Instance.CheckWinLevel();
-            // Debug.LogError("CheckDoneGoal2");
-            Vector3 pos = transform.localPosition;
-            // Debug.LogError("CheckDoneGoal3");
-            BoosterController.Instance.RemoveUndoData(this);
-            // Debug.LogError("CheckDoneGoal4");
-            // Debug.LogError("CheckDoneGoal5");
-            DOVirtual.DelayedCall(0.01f, () =>
+            if (isFirst == false)
             {
-                // Debug.LogError("CheckDoneGoal8");
-                LevelManager.Instance.ReInitGoal(index, pos);
-                Dispose();
-            });
+                DOVirtual.DelayedCall(0.37f, () =>
+                {
+                    LevelManager.Instance.CheckOpenTowel(color);
+                    // Debug.LogError("CheckDoneGoal1");
+                    LevelManager.Instance.CheckWinLevel();
+                    // Debug.LogError("CheckDoneGoal2");
+                    Vector3 pos = transform.localPosition;
+                    // Debug.LogError("CheckDoneGoal3");
+                    BoosterController.Instance.RemoveUndoData(this);
+                    // Debug.LogError("CheckDoneGoal4");
+                    // Debug.LogError("CheckDoneGoal5");
 
-            // Debug.LogError("CheckDoneGoal6");
-            // EffectManager.Instance.PlayFillEffect(index, colorRenderer.material.GetColor(_baseColor));
-            // Debug.LogError("CheckDoneGoal7");
-            //  VibrationUtil.Vibrate(50);
+                    DOVirtual.DelayedCall(0.01f, () =>
+                    {
+                        // Debug.LogError("CheckDoneGoal8");
+                        LevelManager.Instance.ReInitGoal(index, pos);
+                        Dispose();
+                        isFirst = true;
+                    });
+
+                    // Debug.LogError("CheckDoneGoal6");
+                    // EffectManager.Instance.PlayFillEffect(index, colorRenderer.material.GetColor(_baseColor));
+                    // Debug.LogError("CheckDoneGoal7");
+                    //  VibrationUtil.Vibrate(50);
+                });
+
+            }
+            else
+            {
+                LevelManager.Instance.CheckOpenTowel(color);
+                // Debug.LogError("CheckDoneGoal1");
+                LevelManager.Instance.CheckWinLevel();
+                // Debug.LogError("CheckDoneGoal2");
+                Vector3 pos = transform.localPosition;
+                // Debug.LogError("CheckDoneGoal3");
+                BoosterController.Instance.RemoveUndoData(this);
+                // Debug.LogError("CheckDoneGoal4");
+                // Debug.LogError("CheckDoneGoal5");
+
+                DOVirtual.DelayedCall(0.01f, () =>
+                {
+                    // Debug.LogError("CheckDoneGoal8");
+                    LevelManager.Instance.ReInitGoal(index, pos);
+                    Dispose();
+                });
+
+            }
+           
         }
     }
 
@@ -179,25 +218,54 @@ public class GoalScrew : MonoBehaviour
         // colorRenderer.materials[0].DOFloat(0.2f, _smoothness, 0).SetEase(Ease.InQuad);
         Factory.Instance.ReturnGoalScrewToPool(type, gameObject);
     }
-    IEnumerator Event_PlayScrewCloseEff()
+//     IEnumerator Event_PlayScrewCloseEff()
+//     {
+//         yield return new WaitForSeconds(0.37f);
+//         if (LevelManager.Instance.screwCloseEffect.Count > 0)
+//         {
+//             for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
+//             {
+//                 if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
+//                     continue;
+//                 LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
+//                 LevelManager.Instance.screwCloseEffect[i].Play();
+//                 break;
+//             }
+//             Debug.LogError("Event_PlayScrewCloseEff");
+//         }
+// #if UNITY_EDITOR
+//         else
+//             Debug.Log("=><color=Fuchsia>" + "screwCloseEffect nullllllll" + "</color>");
+// #endif
+//     }
+
+
+    private Tween a;
+    
+    void Event_PlayScrewCloseEff()
     {
-        yield return null;
-        if (LevelManager.Instance.screwCloseEffect.Count > 0)
+        a.Kill();
+        a= DOVirtual.DelayedCall(0.37f, () =>
         {
-            for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
+            if (LevelManager.Instance.screwCloseEffect.Count > 0)
             {
-                if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
-                    continue;
-                LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
-                LevelManager.Instance.screwCloseEffect[i].Play();
-                break;
+                for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
+                {
+                    if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
+                        continue;
+                    LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
+                    LevelManager.Instance.screwCloseEffect[i].Play();
+                    break;
+                }
+
+                Debug.LogError("Event_PlayScrewCloseEff");
             }
-        }
-#if UNITY_EDITOR
-        else
-            Debug.Log("=><color=Fuchsia>" + "screwCloseEffect nullllllll" + "</color>");
-#endif
+        });
+     
+
     }
+    
+    
     public void OpenFillBoosterMode()
     {
         arrowParent.gameObject.SetActive(true);

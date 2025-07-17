@@ -360,12 +360,12 @@ public class LevelManager : Singleton<LevelManager>
 
         if (colorQueue.Count > 0)
         {
-            // Debug.LogError("ReInitGoal2");
+             Debug.LogError("ReInitGoal2");
             InitGoal(index, pos, true);
         }
         else
         {
-            // Debug.LogError("ReInitGoal3");
+            Debug.LogError("ReInitGoal3");
             goalGradients[index].DOFade(0, 0.7f);
         }
 
@@ -728,11 +728,7 @@ public class LevelManager : Singleton<LevelManager>
                 return;
         }
 
-        if (GameUtils.Level == 1)
-        {
-            //  TutorialController.Instance.FadeOutTutText();
-        }
-
+  
 
 
 

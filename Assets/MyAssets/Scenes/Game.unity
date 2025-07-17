@@ -1360,6 +1360,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 0
       objectReference: {fileID: 0}
@@ -7201,6 +7205,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198808115056161051, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
       propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
+      propertyPath: startDelay.scalar
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
@@ -19904,6 +19912,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198913770946632853, guid: a6af35c936031b9439a3f3ad33bf5e80, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 0
       objectReference: {fileID: 0}
@@ -20509,7 +20521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -0, y: 20.001587}
+  m_AnchoredPosition: {x: 0, y: 20.001587}
   m_SizeDelta: {x: 391.27, y: 151.13}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1913669762
