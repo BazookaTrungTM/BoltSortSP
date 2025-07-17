@@ -199,6 +199,7 @@ MonoBehaviour:
   amountSortPre: 0
   myNutsList: []
   ropeCount: 0
+  isFirst: 0
 --- !u!1 &3730206942692039279
 GameObject:
   m_ObjectHideFlags: 0

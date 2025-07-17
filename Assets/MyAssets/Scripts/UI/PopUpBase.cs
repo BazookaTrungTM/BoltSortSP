@@ -25,7 +25,7 @@ public class PopUpBase : MonoBehaviour
             Luna.Unity.LifeCycle.GameEnded();
             openTween?.Kill();
             transform.GetChild(0).localScale = Vector3.zero;
-            openTween = transform.GetChild(0).DOScale(1, 0.5f).SetEase(Ease.OutBack).OnComplete(() => openTween.Kill());
+            openTween = transform.GetChild(0).DOScale(1, 0.5f).SetDelay(.5f).SetEase(Ease.OutBack).OnComplete(() => openTween.Kill());
         }
         else if (popUpType == 1)
         {

@@ -47,11 +47,9 @@ public class GoalScrew : MonoBehaviour
         {
             animator.SetTrigger(_openTrigger);
             DOVirtual.DelayedCall(0, () => animator.enabled = false);
-            Debug.LogError("_openTrigger");
         }
         else
         {
-            Debug.LogError("_openTrigger 2");
             animator.enabled = false;
 
         }
@@ -128,7 +126,6 @@ public class GoalScrew : MonoBehaviour
         if (index + 1 == size && !isRunEffCloseScrew)
         {
             isRunEffCloseScrew = true;
-            Debug.LogError("SortNutPos");
 
             Event_PlayScrewCloseEff();
         }
@@ -150,7 +147,7 @@ public class GoalScrew : MonoBehaviour
     {
         if (indexInList + 1 == size)
         {
-            // Debug.LogError("CheckDoneGoal");
+            Debug.LogError("CheckDoneGoal");
             if (isFirst == false)
             {
                 DOVirtual.DelayedCall(0.37f, () =>
@@ -200,7 +197,7 @@ public class GoalScrew : MonoBehaviour
                 });
 
             }
-           
+
         }
     }
 
@@ -218,34 +215,34 @@ public class GoalScrew : MonoBehaviour
         // colorRenderer.materials[0].DOFloat(0.2f, _smoothness, 0).SetEase(Ease.InQuad);
         Factory.Instance.ReturnGoalScrewToPool(type, gameObject);
     }
-//     IEnumerator Event_PlayScrewCloseEff()
-//     {
-//         yield return new WaitForSeconds(0.37f);
-//         if (LevelManager.Instance.screwCloseEffect.Count > 0)
-//         {
-//             for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
-//             {
-//                 if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
-//                     continue;
-//                 LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
-//                 LevelManager.Instance.screwCloseEffect[i].Play();
-//                 break;
-//             }
-//             Debug.LogError("Event_PlayScrewCloseEff");
-//         }
-// #if UNITY_EDITOR
-//         else
-//             Debug.Log("=><color=Fuchsia>" + "screwCloseEffect nullllllll" + "</color>");
-// #endif
-//     }
+    //     IEnumerator Event_PlayScrewCloseEff()
+    //     {
+    //         yield return new WaitForSeconds(0.37f);
+    //         if (LevelManager.Instance.screwCloseEffect.Count > 0)
+    //         {
+    //             for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
+    //             {
+    //                 if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
+    //                     continue;
+    //                 LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
+    //                 LevelManager.Instance.screwCloseEffect[i].Play();
+    //                 break;
+    //             }
+    //             Debug.LogError("Event_PlayScrewCloseEff");
+    //         }
+    // #if UNITY_EDITOR
+    //         else
+    //             Debug.Log("=><color=Fuchsia>" + "screwCloseEffect nullllllll" + "</color>");
+    // #endif
+    //     }
 
 
     private Tween a;
-    
+
     void Event_PlayScrewCloseEff()
     {
         a.Kill();
-        a= DOVirtual.DelayedCall(0.37f, () =>
+        a = DOVirtual.DelayedCall(0.37f, () =>
         {
             if (LevelManager.Instance.screwCloseEffect.Count > 0)
             {
@@ -257,15 +254,11 @@ public class GoalScrew : MonoBehaviour
                     LevelManager.Instance.screwCloseEffect[i].Play();
                     break;
                 }
-
-                Debug.LogError("Event_PlayScrewCloseEff");
             }
+            LevelManager.Instance.ShowCompliment(gameObject.transform.position);
         });
-     
-
     }
-    
-    
+
     public void OpenFillBoosterMode()
     {
         arrowParent.gameObject.SetActive(true);

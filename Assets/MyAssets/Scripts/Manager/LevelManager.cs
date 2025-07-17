@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
+using TMPro;
+using System.Linq;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -360,7 +362,7 @@ public class LevelManager : Singleton<LevelManager>
 
         if (colorQueue.Count > 0)
         {
-             Debug.LogError("ReInitGoal2");
+            Debug.LogError("ReInitGoal2");
             InitGoal(index, pos, true);
         }
         else
@@ -728,7 +730,7 @@ public class LevelManager : Singleton<LevelManager>
                 return;
         }
 
-  
+
 
 
 
@@ -1123,5 +1125,47 @@ public class LevelManager : Singleton<LevelManager>
     #region TMT code
     public List<ParticleSystem> screwCloseEffect;
     public List<FXHolderCellComplete> fxScrewCloseEffect;
+    [SerializeField]
+    readonly string[] compliments = new string[] {
+        "Cool!",
+        "Good Job!",
+        "Fantastic!",
+        "Nice!",
+    };
+    [SerializeField] TMP_Text complimentText;
+    List<string> textTmp = new List<string>();
+    [SerializeField] Vector3 offsetPos;
+    public void ShowCompliment(Vector3 pos)
+    {
+        if (textTmp.Count <= 0)
+            textTmp = compliments.ToList();
+        int intRandom = Random.Range(0, textTmp.Count);
+        string randomText = textTmp[intRandom];
+        complimentText.text = randomText;
+        complimentText.gameObject.SetActive(true);
+
+        // Reset to original state
+        complimentText.transform.localPosition = pos + offsetPos;
+        complimentText.transform.localScale = Vector3.zero;
+        complimentText.color = new Color(1, 1, 1, 1); // full opacity
+        complimentText.DOKill();
+
+        // Pop scale animation
+        complimentText.transform.DOScale(1.2f, 0.2f)
+            .SetEase(Ease.OutBack)
+            .OnComplete(() => complimentText.transform.DOScale(1f, 0.1f));
+
+        // Move up animation
+        complimentText.transform
+            .DOMoveY(complimentText.transform.position.y + 3f, 1f)
+            .SetEase(Ease.OutCubic);
+
+        // Fade out animation
+        complimentText.DOFade(0f, 1f)
+            .SetDelay(0.5f)
+            .OnComplete(() => complimentText.gameObject.SetActive(false));
+
+        textTmp.RemoveAt(intRandom);
+    }
     #endregion TMT code
 }
