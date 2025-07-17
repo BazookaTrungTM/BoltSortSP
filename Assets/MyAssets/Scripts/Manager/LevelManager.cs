@@ -1125,6 +1125,7 @@ public class LevelManager : Singleton<LevelManager>
     }
     #endregion
     #region TMT code
-    public ParticleSystem screwCloseEffect;
+    public List<ParticleSystem> screwCloseEffect;
+    public List<FXHolderCellComplete> fxScrewCloseEffect;
     #endregion TMT code
 }

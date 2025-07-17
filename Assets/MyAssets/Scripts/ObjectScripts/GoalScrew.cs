@@ -46,7 +46,7 @@ public class GoalScrew : MonoBehaviour
         if (isRecycle)
         {
             animator.SetTrigger(_openTrigger);
-            DOVirtual.DelayedCall(0.5f, () => animator.enabled = false);
+            DOVirtual.DelayedCall(0, () => animator.enabled = false);
         }
         else
             animator.enabled = false;
@@ -67,20 +67,20 @@ public class GoalScrew : MonoBehaviour
         root.localPosition = Vector3.zero;
         root.localScale = Vector3.one * 0.1f;
         root.GetChild(3).localPosition = new Vector3(0, -5, 0);
-        root.DOScale(1, 0.1f);
-        root.GetChild(3).DOLocalMoveY(-3.25f, 0.16f).OnComplete(() =>
+        root.DOScale(1, 0);
+        root.GetChild(3).DOLocalMoveY(-3.25f, 0).OnComplete(() =>
         {
-            root.GetChild(3).DOLocalMoveY(0, 0.24f);
+            root.GetChild(3).DOLocalMoveY(0, 0);
         });
     }
     private void AnimClose()
     {
-        DOVirtual.DelayedCall(0.15f, () =>
+        DOVirtual.DelayedCall(0, () =>
         {
-            root.GetChild(3).DOLocalMoveY(-3.25f, 0.12f).OnComplete(() =>
+            root.GetChild(3).DOLocalMoveY(-3.25f, 0).OnComplete(() =>
             {
-                root.DOScale(0.1f, 0.08f);
-                root.GetChild(3).DOLocalMoveY(-5, 0.08f).OnComplete(() => PlayCloseEffect());
+                root.DOScale(0.1f, 0);
+                root.GetChild(3).DOLocalMoveY(-5, 0).OnComplete(() => PlayCloseEffect());
             });
         });
     }
@@ -133,7 +133,6 @@ public class GoalScrew : MonoBehaviour
             else
                 EffectManager.Instance.PlayNutSpecialEffect(nut.transform.position);
 
-
             // Debug.LogError("SortNutPos");
             CheckDoneGoal(index);
         });
@@ -151,13 +150,14 @@ public class GoalScrew : MonoBehaviour
             // Debug.LogError("CheckDoneGoal3");
             BoosterController.Instance.RemoveUndoData(this);
             // Debug.LogError("CheckDoneGoal4");
-            Dispose();
             // Debug.LogError("CheckDoneGoal5");
-            DOVirtual.DelayedCall(0.32f, () =>
+            DOVirtual.DelayedCall(0.01f, () =>
             {
                 // Debug.LogError("CheckDoneGoal8");
                 LevelManager.Instance.ReInitGoal(index, pos);
+                Dispose();
             });
+
             // Debug.LogError("CheckDoneGoal6");
             // EffectManager.Instance.PlayFillEffect(index, colorRenderer.material.GetColor(_baseColor));
             // Debug.LogError("CheckDoneGoal7");
@@ -181,11 +181,17 @@ public class GoalScrew : MonoBehaviour
     }
     IEnumerator Event_PlayScrewCloseEff()
     {
-        yield return new WaitForSeconds(0.15f);
-        if (LevelManager.Instance.screwCloseEffect != null)
+        yield return null;
+        if (LevelManager.Instance.screwCloseEffect.Count > 0)
         {
-            LevelManager.Instance.screwCloseEffect.transform.position = gameObject.transform.position;
-            LevelManager.Instance.screwCloseEffect.Play();
+            for (int i = 0; i < LevelManager.Instance.fxScrewCloseEffect.Count; i++)
+            {
+                if (LevelManager.Instance.fxScrewCloseEffect[i].isUsed)
+                    continue;
+                LevelManager.Instance.screwCloseEffect[i].transform.position = gameObject.transform.position;
+                LevelManager.Instance.screwCloseEffect[i].Play();
+                break;
+            }
         }
 #if UNITY_EDITOR
         else
