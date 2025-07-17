@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Reflection;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class LunaManager : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class LunaManager : MonoBehaviour
     public Transform winpopup;
     private float lastScreenWidth;
     private float lastScreenHeight;
+    [SerializeField] CanvasScaler canvasScaler;
     public Transform Rect14; private void Awake()
     {
         if (instace == null)
@@ -59,6 +61,7 @@ public class LunaManager : MonoBehaviour
             bg.transform.localScale = new Vector3(3.5f, 2.8f, 3.5f);
             winpopup.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             Rect14.localPosition = new Vector3(0f, 1.5f, 0f);
+            canvasScaler.matchWidthOrHeight = 1;
         }
         else
         {
@@ -69,6 +72,7 @@ public class LunaManager : MonoBehaviour
             bg.transform.localScale = new Vector3(2.5f, 2.8f, 2.5f);
             winpopup.localScale = Vector3.one;
             Rect14.localPosition = new Vector3(0f, 1.8f, 0f);
+            canvasScaler.matchWidthOrHeight = 0;
 
         }
     }
@@ -112,6 +116,9 @@ public class LunaManager : MonoBehaviour
     {
         Debug.Log("Play");
         Luna.Unity.Playable.InstallFullGame();
+    }
+    public void Btn_GameEnded()
+    {
         Luna.Unity.LifeCycle.GameEnded();
     }
 

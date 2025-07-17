@@ -11,6 +11,7 @@ public class GoalScrew : MonoBehaviour
     [SerializeField] Transform root;
     [SerializeField] MeshRenderer colorRenderer;
     [SerializeField] Animator animator;
+    [SerializeField] bool isRunEffCloseScrew;
     public Transform itemHolder;
     public NutType type;
     public Transform gate;
@@ -31,6 +32,10 @@ public class GoalScrew : MonoBehaviour
     private int _baseColor = Shader.PropertyToID("_BaseColor");
     // private int _metalic = Shader.PropertyToID("_Metallic");
     // private int _smoothness = Shader.PropertyToID("_Smoothness");
+    void OnEnable()
+    {
+        isRunEffCloseScrew = false;
+    }
 
     public void Init(bool isRecycle)
     {
@@ -115,6 +120,11 @@ public class GoalScrew : MonoBehaviour
     }
     public void SortNutPos(Nut nut, int index, bool isBooster = false)
     {
+        if (index + 1 == size && !isRunEffCloseScrew)
+        {
+            isRunEffCloseScrew = true;
+            StartCoroutine(Event_PlayScrewCloseEff());
+        }
         Vector3 nutPos = new Vector3(0, index * delta, 0);
         nut.SortPos(nutPos, () =>
         {
@@ -169,6 +179,19 @@ public class GoalScrew : MonoBehaviour
         // colorRenderer.materials[0].DOFloat(0.2f, _smoothness, 0).SetEase(Ease.InQuad);
         Factory.Instance.ReturnGoalScrewToPool(type, gameObject);
     }
+    IEnumerator Event_PlayScrewCloseEff()
+    {
+        yield return new WaitForSeconds(0.15f);
+        if (LevelManager.Instance.screwCloseEffect != null)
+        {
+            LevelManager.Instance.screwCloseEffect.transform.position = gameObject.transform.position;
+            LevelManager.Instance.screwCloseEffect.Play();
+        }
+#if UNITY_EDITOR
+        else
+            Debug.Log("=><color=Fuchsia>" + "screwCloseEffect nullllllll" + "</color>");
+#endif
+    }
     public void OpenFillBoosterMode()
     {
         arrowParent.gameObject.SetActive(true);
@@ -189,7 +212,6 @@ public class GoalScrew : MonoBehaviour
         AudioManager.instance.PlaySFX(SoundType.Holder_Close);
         animator.enabled = true;
         animator.SetTrigger(_closeTrigger);
-
         //AnimClose();
     }
 

@@ -26,10 +26,10 @@ public class Nut : MonoBehaviour
     [SerializeField] ParticleSystem completeParticle;
     [SerializeField] ParticleSystem iceBreakParticle;
     [SerializeField] ParticleSystem revealParticle;
-  
+
     [SerializeField] GameObject bombComponent;
     [SerializeField] TextMeshPro bombCount;
-   // [SerializeField] Rope firtAttachment;
+    // [SerializeField] Rope firtAttachment;
     [SerializeField] Material colorMaterial;
     [SerializeField] Material hiddenMaterial;
     public Nut connectedNut;
@@ -58,9 +58,9 @@ public class Nut : MonoBehaviour
         moveTween?.Kill();
         isMoving = false;
         connectedNut = null;
-    //    firtAttachment.gameObject.SetActive(false);
+        //    firtAttachment.gameObject.SetActive(false);
         secondAttachment.gameObject.SetActive(false);
-      //  firtAttachment.GetComponent<LineRenderer>().positionCount = 0;
+        //  firtAttachment.GetComponent<LineRenderer>().positionCount = 0;
         isExplore = false;
         visual.GetComponent<BoxCollider>().enabled = true;
         SetSpecialComponent();
@@ -74,7 +74,7 @@ public class Nut : MonoBehaviour
         }
         Color trailColor = Factory.Instance.GetGradientColorByType(data.color);
         if (data.color != ColorType.Blue && data.color != ColorType.Blue_2)
-            
+
             trailColor.a = 1;
         trailRenderer.startColor = trailColor;
         if (data.nutType == NutType.Normal)
@@ -100,7 +100,7 @@ public class Nut : MonoBehaviour
     private void SetSpecialComponent()
     {
         iceStep = data.isIce ? 3 : 0;
-     //   SetIceVFX();
+        //   SetIceVFX();
 
         InitBombComponent();
     }
@@ -122,8 +122,8 @@ public class Nut : MonoBehaviour
         if (iceStep > 0)
         {
             iceStep--;
-         //   SetIceVFX();
-         AudioManager.instance.PlaySFX(SoundType.Ice_Break);
+            //   SetIceVFX();
+            AudioManager.instance.PlaySFX(SoundType.Ice_Break);
             PlayIceBreakParticle();
             if (iceStep <= 0)
             {
@@ -138,7 +138,7 @@ public class Nut : MonoBehaviour
         {
             iceStep = 0;
             data.isIce = false;
-         //   SetIceVFX();
+            //   SetIceVFX();
         }
     }
     //public void SetIceVFX()
@@ -173,7 +173,7 @@ public class Nut : MonoBehaviour
     #endregion
 
     #region 
-   
+
     public void InitBombComponent()
     {
         bombComponent.SetActive(data.bombCount > 0);
@@ -187,16 +187,16 @@ public class Nut : MonoBehaviour
         Tween bombCountTween = bombCount.transform.DOScale(1.2f, 0.3f)
               .SetEase(Ease.Linear)
               .SetLoops(-1, LoopType.Yoyo);
-            
+
 
 
 
         if (data.bombCount < 3)
-         //   bombCount.GetComponent<DOTweenAnimation>().DOPlay();
-        bombCountTween.Play();
+            //   bombCount.GetComponent<DOTweenAnimation>().DOPlay();
+            bombCountTween.Play();
         else
-        //    bombCount.GetComponent<DOTweenAnimation>().DOPause();
-        bombCountTween.Pause();
+            //    bombCount.GetComponent<DOTweenAnimation>().DOPause();
+            bombCountTween.Pause();
         //  bombCount.GetComponent<DOTweenAnimation>().DOPause();
 
 
@@ -225,7 +225,7 @@ public class Nut : MonoBehaviour
             {
                 PlayBombExploreVFX();
                 GameManager.Instance.SetLose();
-              //  HandleFirebase.Instance.LogEventWithString(HandleFirebase.Lose_By_end_level, "BombExplore");
+                //  HandleFirebase.Instance.LogEventWithString(HandleFirebase.Lose_By_end_level, "BombExplore");
             }
             else if (data.bombCount < 6)
             {
@@ -263,7 +263,7 @@ public class Nut : MonoBehaviour
         VibrationUtil.Vibrate(100);
         Physics.gravity = new Vector3(0, -40, 0);
         int layerMask = LayerMask.GetMask("Default");
-        Collider[] colliders = Physics.OverlapBox(transform.position, new Vector3(1, 5, 1) ,Quaternion.identity, layerMask);
+        Collider[] colliders = Physics.OverlapBox(transform.position, new Vector3(1, 5, 1), Quaternion.identity, layerMask);
         foreach (Collider hit in colliders)
         {
             if (hit.gameObject.GetComponentInParent<Nut>() && hit.gameObject.GetComponentInParent<Nut>().isMoving == false)
@@ -272,14 +272,13 @@ public class Nut : MonoBehaviour
                 nut.shadow2.SetActive(false);
                 nut.trailRenderer.enabled = false;
                 nut.isExplore = true;
-                
 
                 Rigidbody rb = nut.gameObject.AddComponent<Rigidbody>();
 
                 rb.mass = 0.5f;
                 rb.useGravity = true;
                 rb.isKinematic = false;
-                rb.AddExplosionForce(700, transform.position + new Vector3 (1, 0 ,1), 20, 5);
+                rb.AddExplosionForce(700, transform.position + new Vector3(1, 0, 1), 20, 5);
             }
         }
     }
@@ -310,17 +309,17 @@ public class Nut : MonoBehaviour
 
         if (transform.position.x < connectedNut.transform.position.x)
         {
-          //  firtAttachment.gameObject.SetActive(false);
+            //  firtAttachment.gameObject.SetActive(false);
             connectedNut.secondAttachment.gameObject.SetActive(false);
         }
         else
         {
             secondAttachment.gameObject.SetActive(false);
-          //  connectedNut.firtAttachment.gameObject.SetActive(false);
+            //  connectedNut.firtAttachment.gameObject.SetActive(false);
         }
-       // Vector3 posVFX = (firtAttachment.transform.position + connectedNut.secondAttachment.transform.position) / 2;
-    //    PlayCutRopeParticle(posVFX);
-    AudioManager.instance.PlaySFX(SoundType.Rope_Cut);
+        // Vector3 posVFX = (firtAttachment.transform.position + connectedNut.secondAttachment.transform.position) / 2;
+        //    PlayCutRopeParticle(posVFX);
+        AudioManager.instance.PlaySFX(SoundType.Rope_Cut);
         VibrationUtil.Vibrate(50);
         connectedNut.connectedNut = null;
         connectedNut = null;
@@ -343,7 +342,7 @@ public class Nut : MonoBehaviour
         CutRope();
         goal.AddNut(this);
         moveTween?.Kill();
-        float TimeA = 0.35f * 33 /LevelManager.Instance.speed;
+        float TimeA = 0.35f * 33 / LevelManager.Instance.speed;
         RotateOut(TimeA);
         transform.DOMove(screw.gate.position, TimeA).SetEase(LevelManager.Instance.easeStart).OnComplete(() =>
         {
@@ -355,10 +354,7 @@ public class Nut : MonoBehaviour
             {
                 goal.SortNutPos(this, indexInList, isBooster);
             });
-
         });
-
-
     }
 
     public void UndoMove(Screw previousScrew, GoalScrew goal)
@@ -370,7 +366,6 @@ public class Nut : MonoBehaviour
         int index = previousScrew.myNutsList.Count - 1;
         //float time = 0.2f + (4 - goal.myNutsList.Count) * 0.05f;
         float timeB = 0.35f * 33 / LevelManager.Instance.speed;
-
 
         RotateOut(timeB);
         transform.DOMove(goal.gate.position + new Vector3(0, 0.5f, 0), timeB).SetEase(Ease.OutQuad).OnComplete(() =>
@@ -392,15 +387,15 @@ public class Nut : MonoBehaviour
             {
                 RotateIn();
                 previousScrew.SortNutPos(this, index);
-                DOVirtual.DelayedCall(0.4f, () => 
-                { 
+                DOVirtual.DelayedCall(0.4f, () =>
+                {
                     EffectManager.Instance.PlayNutSpecialEffect(transform.position);
                     visual.GetComponent<BoxCollider>().enabled = true;
                 });
             });
 
         });
-    } 
+    }
     public void MoveWhenConnectRope()
     {
         if (!transform.parent.parent.parent.GetComponent<Screw>()) return;
@@ -476,7 +471,7 @@ public class Nut : MonoBehaviour
         float yRotate = visual.eulerAngles.y;
         return visual.DOLocalRotate(new Vector3(0, yRotate - 360, 0), 0.4f, RotateMode.FastBeyond360)
                  .SetEase(Ease.InQuad)
-                 .OnComplete(() => visual.rotation = Quaternion.Euler(new Vector3(0, yRotate, 0))); 
+                 .OnComplete(() => visual.rotation = Quaternion.Euler(new Vector3(0, yRotate, 0)));
     }
     public Tween TweenSortPos(Vector3 pos, Action action)
     {

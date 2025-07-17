@@ -227,7 +227,7 @@ Material:
     - _ZWrite: 1
     - __dummy__: 0
     m_Colors:
-    - _BaseColor: {r: 0.1391156, g: 0.745283, b: 0.116011046, a: 1}
+    - _BaseColor: {r: 0.3647059, g: 0.54901963, b: 0.1764706, a: 1}
     - _Color: {r: 0.50980395, g: 0.69803923, b: 0.043137256, a: 1}
     - _DepthColor: {r: 0, g: 0, b: 1, a: 1}
     - _DiffuseTint: {r: 1, g: 0.5, b: 0, a: 1}
@@ -241,7 +241,7 @@ Material:
     - _ReflectionCubemapColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 0.79910296, g: 0.79910296, b: 0.79910296, a: 1}
     - _RimDirVert: {r: 0, g: 0, b: 1, a: 1}
-    - _SColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _TCP2_AMBIENT_BACK: {r: 0.30475318, g: 0.4811321, b: 0.15659487, a: 1}

@@ -186,6 +186,7 @@ MonoBehaviour:
   root: {fileID: 1655731374979768795}
   colorRenderer: {fileID: 2705937413535175343}
   animator: {fileID: 8091631882024998269}
+  isRunEffCloseScrew: 0
   itemHolder: {fileID: 8485510513476548706}
   type: 0
   gate: {fileID: 6236825492827252894}

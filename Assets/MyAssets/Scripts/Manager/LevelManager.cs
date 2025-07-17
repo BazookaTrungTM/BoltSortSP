@@ -1124,4 +1124,7 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
     #endregion
+    #region TMT code
+    public ParticleSystem screwCloseEffect;
+    #endregion TMT code
 }
