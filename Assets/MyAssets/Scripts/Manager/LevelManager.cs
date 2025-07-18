@@ -1137,6 +1137,7 @@ public class LevelManager : Singleton<LevelManager>
     [Header("Hand Tut")]
     public Transform hand; // Bàn tay
     [SerializeField] Vector3 offsetHand;
+    [SerializeField] TMP_Text txtPopupLose;
     void Start()
     {
         hand.DOScale(2.6f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
@@ -1200,6 +1201,8 @@ public class LevelManager : Singleton<LevelManager>
             {"Fantastic!", maleFantasticSound},
             {"Good Job!", maleGoodJobSound},
         };
+        txtPopupLose.fontMaterial = new Material(txtPopupLose.fontMaterial); // clone một instance riêng
+        txtPopupLose.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.4f);
     }
     void HandTut()
     {
