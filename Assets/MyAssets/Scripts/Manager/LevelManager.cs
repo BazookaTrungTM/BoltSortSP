@@ -1136,9 +1136,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] AudioSource maleGoodJobSound;
     [Header("Hand Tut")]
     public Transform hand;   // Bàn tay
-    [SerializeField] Transform target; // Mục tiêu
-    [SerializeField] float distanceFromTarget = 0.5f; // Khoảng cách tay tới object
-    void Start()
+    [SerializeField] Vector3 offsetHand;
+    void Update()
     {
         HandTut();
     }
@@ -1200,14 +1199,14 @@ public class LevelManager : Singleton<LevelManager>
     }
     void HandTut()
     {
+        if (!hand.gameObject.activeSelf) return;
         if (hand == null || TransformNutForTut() == null) return;
-        target = TransformNutForTut();
         // Hướng từ bàn tay đến object
-        Vector3 direction = (target.position - hand.position).normalized;
+        Vector3 direction = (TransformNutForTut().position - hand.position).normalized;
         // Vị trí mới cách target 1 đoạn theo hướng ngược lại
-        hand.position = target.position - direction * distanceFromTarget;
+        hand.position = TransformNutForTut().position - direction + offsetHand;
         // Xoay bàn tay nhìn về target
-        hand.rotation = Quaternion.LookRotation(direction);
+        // hand.rotation = Quaternion.LookRotation(direction);
     }
     Transform TransformNutForTut()
     {
