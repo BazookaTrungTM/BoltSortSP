@@ -49,13 +49,13 @@ public class LunaManager : MonoBehaviour
 
     public void CheckAndApplyOrientation()
     {
-        bool isLandscape = Screen.width > Screen.height;
+        bool isLandscape = Screen.width / Screen.height >= 0.65f;
 
         if (isLandscape)
         {
             float aspect = (float)Screen.width / Screen.height;
 
-            ZoomInCamera(GetOrthoSizeLandscape(aspect) - 0.3f);
+            ZoomInCamera(11);
             LevelManager.Instance.UpdateScrew(true);
             LevelManager.Instance.UpdateScrewHolder(true);
             bg.transform.localScale = new Vector3(3.5f, 2.8f, 3.5f);
