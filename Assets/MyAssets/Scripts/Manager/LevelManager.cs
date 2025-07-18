@@ -1135,8 +1135,12 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] AudioSource maleFantasticSound;
     [SerializeField] AudioSource maleGoodJobSound;
     [Header("Hand Tut")]
-    public Transform hand;   // Bàn tay
+    public Transform hand; // Bàn tay
     [SerializeField] Vector3 offsetHand;
+    void Start()
+    {
+        hand.DOScale(0.9f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InSine);
+    }
     void Update()
     {
         HandTut();
