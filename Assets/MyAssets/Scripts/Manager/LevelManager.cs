@@ -1139,7 +1139,7 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] Vector3 offsetHand;
     void Start()
     {
-        hand.DOScale(0.9f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InSine);
+        hand.DOScale(2.6f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
     }
     void Update()
     {
