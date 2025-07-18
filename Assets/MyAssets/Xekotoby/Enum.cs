@@ -5,11 +5,11 @@ public enum MusicType
 }
 
 
-    public enum ScreenType
-        {
-            Horizontal,
-            Vertical
-        }
+public enum ScreenType
+{
+    Horizontal,
+    Vertical
+}
 
 public enum SoundType
 {
@@ -43,6 +43,6 @@ public enum SoundType
     Island_Complete_1,
     Island_Complete_2,
     Feature_Anounce,
-    
+
     BGM,
 }

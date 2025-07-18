@@ -45,6 +45,7 @@ public class LevelManager : Singleton<LevelManager>
     protected override void Awake()
     {
         base.Awake();
+        InitWowSoudList();
     }
     protected override void OnDestroy()
     {
@@ -362,12 +363,10 @@ public class LevelManager : Singleton<LevelManager>
 
         if (colorQueue.Count > 0)
         {
-            Debug.LogError("ReInitGoal2");
             InitGoal(index, pos, true);
         }
         else
         {
-            Debug.LogError("ReInitGoal3");
             goalGradients[index].DOFade(0, 0.7f);
         }
 
@@ -1125,24 +1124,37 @@ public class LevelManager : Singleton<LevelManager>
     #region TMT code
     public List<ParticleSystem> screwCloseEffect;
     public List<FXHolderCellComplete> fxScrewCloseEffect;
-    [SerializeField]
-    readonly string[] compliments = new string[] {
-        "Cool!",
-        "Good Job!",
-        "Fantastic!",
-        "Nice!",
-    };
     [SerializeField] TMP_Text complimentText;
     List<string> textTmp = new List<string>();
     [SerializeField] Vector3 offsetPos;
+    [Header("Wow Sound")]
+    Dictionary<string, AudioSource> complimentTextSounds = new Dictionary<string, AudioSource>();
+    [SerializeField] AudioSource femaleExcellentSound;
+    [SerializeField] AudioSource femaleWellDoneSound;
+    [SerializeField] AudioSource femaleWowSound;
+    [SerializeField] AudioSource maleFantasticSound;
+    [SerializeField] AudioSource maleGoodJobSound;
     public void ShowCompliment(Vector3 pos)
     {
+        if (complimentTextSounds.Count == 0) return;
+
+        // Lấy danh sách key (các câu khen) từ dictionary
+        List<string> keys = complimentTextSounds.Keys.ToList();
+
+        // Khởi tạo lại nếu đã dùng hết
         if (textTmp.Count <= 0)
-            textTmp = compliments.ToList();
+            textTmp = keys.ToList();
+
         int intRandom = Random.Range(0, textTmp.Count);
         string randomText = textTmp[intRandom];
         complimentText.text = randomText;
         complimentText.gameObject.SetActive(true);
+
+        // Phát âm thanh nếu có
+        if (complimentTextSounds.TryGetValue(randomText, out AudioSource sound) && sound != null)
+        {
+            sound.Play();
+        }
 
         // Reset to original state
         complimentText.transform.localPosition = pos + offsetPos;
@@ -1166,6 +1178,17 @@ public class LevelManager : Singleton<LevelManager>
             .OnComplete(() => complimentText.gameObject.SetActive(false));
 
         textTmp.RemoveAt(intRandom);
+    }
+    void InitWowSoudList()
+    {
+        complimentTextSounds = new Dictionary<string, AudioSource>()
+        {
+            {"Excellent!", femaleExcellentSound},
+            {"Well Done!", femaleWellDoneSound},
+            {"Wow!", femaleWowSound},
+            {"Fantastic!", maleFantasticSound},
+            {"Good Job!", maleGoodJobSound},
+        };
     }
     #endregion TMT code
 }

@@ -25,7 +25,7 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] AudioSource sfxAudioSourceShell;
 
-  
+
     private List<AudioSource> sfxShellPool = new List<AudioSource>();
     //private BGMType currentBGM;
 
@@ -45,27 +45,27 @@ public class AudioManager : MonoBehaviour
 
     //    currentBGM = type;
     //}
-    
-    
-    
+
+
+
     [SerializeField] AudioClip clickUI;
-   // [SerializeField] AudioClip Coin_Collect;
+    // [SerializeField] AudioClip Coin_Collect;
     [SerializeField] AudioClip Nut_Go_To_Screw;
     [SerializeField] AudioClip Nut_Out_Of_Screw;
     [SerializeField] private AudioClip Bomb_Explore;
     [SerializeField] private AudioClip Bomb_Defuse;
-  //  [SerializeField] private AudioClip Booster_Fill;
-  //  [SerializeField] private AudioClip Booster_Add_Holder;
-  //  [SerializeField] private AudioClip Update_Progress;
+    //  [SerializeField] private AudioClip Booster_Fill;
+    //  [SerializeField] private AudioClip Booster_Add_Holder;
+    //  [SerializeField] private AudioClip Update_Progress;
     [SerializeField] private AudioClip Show_Hidden;
-   // [SerializeField] private AudioClip Done_Progress;
+    // [SerializeField] private AudioClip Done_Progress;
     [SerializeField] private AudioClip Firework;
     [SerializeField] private AudioClip Win;
     [SerializeField] private AudioClip Lose;
     [SerializeField] private AudioClip rope;
 
     [SerializeField] private AudioClip holdeClose;
-   // [SerializeField] private AudioClip Feature_Anounce;
+    // [SerializeField] private AudioClip Feature_Anounce;
     //[SerializeField] private AudioClip BGM;
     [SerializeField] private AudioClip Complete_Holder_1;
     [SerializeField] private AudioClip Complete_Holder_2;
@@ -182,7 +182,7 @@ public class AudioManager : MonoBehaviour
             bgmAudioSource.loop = true;
             if (bgmAudioSource != null)
                 Destroy(bgmAudioSource.gameObject);
-          //  bgmAudioSource = sfxAudioSource;
+            //  bgmAudioSource = sfxAudioSource;
         }
 
         return sfxAudioSource;
@@ -198,7 +198,7 @@ public class AudioManager : MonoBehaviour
         //     }
         // }
 
-        switch (type )
+        switch (type)
         {
             case SoundType.Click_UI:
                 return clickUI;
@@ -219,7 +219,7 @@ public class AudioManager : MonoBehaviour
             case SoundType.Show_Hidden:
                 return Show_Hidden;
             case SoundType.Done_Progress:
-             //   return Done_Progress;
+            //   return Done_Progress;
             case SoundType.Firework:
                 return Firework;
             case SoundType.Win:
@@ -241,8 +241,8 @@ public class AudioManager : MonoBehaviour
             case SoundType.Complete_Holder_2:
                 return Complete_Holder_1;
             default: return null;
-         
-            
+
+
         }
         return null;
     }

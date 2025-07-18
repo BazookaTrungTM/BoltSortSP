@@ -147,7 +147,6 @@ public class GoalScrew : MonoBehaviour
     {
         if (indexInList + 1 == size)
         {
-            Debug.LogError("CheckDoneGoal");
             if (isFirst == false)
             {
                 DOVirtual.DelayedCall(0.37f, () =>
