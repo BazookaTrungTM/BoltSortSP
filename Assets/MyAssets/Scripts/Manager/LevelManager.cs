@@ -1134,6 +1134,14 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] AudioSource femaleWowSound;
     [SerializeField] AudioSource maleFantasticSound;
     [SerializeField] AudioSource maleGoodJobSound;
+    [Header("Hand Tut")]
+    public Transform hand;   // Bàn tay
+    [SerializeField] Transform target; // Mục tiêu
+    [SerializeField] float distanceFromTarget = 0.5f; // Khoảng cách tay tới object
+    void Start()
+    {
+        HandTut();
+    }
     public void ShowCompliment(Vector3 pos)
     {
         if (complimentTextSounds.Count == 0) return;
@@ -1189,6 +1197,29 @@ public class LevelManager : Singleton<LevelManager>
             {"Fantastic!", maleFantasticSound},
             {"Good Job!", maleGoodJobSound},
         };
+    }
+    void HandTut()
+    {
+        if (hand == null || TransformNutForTut() == null) return;
+        target = TransformNutForTut();
+        // Hướng từ bàn tay đến object
+        Vector3 direction = (target.position - hand.position).normalized;
+        // Vị trí mới cách target 1 đoạn theo hướng ngược lại
+        hand.position = target.position - direction * distanceFromTarget;
+        // Xoay bàn tay nhìn về target
+        hand.rotation = Quaternion.LookRotation(direction);
+    }
+    Transform TransformNutForTut()
+    {
+        Transform target = null;
+        foreach (var screwItem in screwsInScene)
+        {
+            if (screwItem.myNutsList[screwItem.myNutsList.Count - 1].data.color == ColorType.Blue)
+            {
+                return screwItem.myNutsList[screwItem.myNutsList.Count - 1].transform;
+            }
+        }
+        return target;
     }
     #endregion TMT code
 }

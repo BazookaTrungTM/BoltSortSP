@@ -459,6 +459,8 @@ public class Nut : MonoBehaviour
     }
     public Tween TweenRotateOut(float time = 0.3f)
     {
+        if (LevelManager.Instance.hand.gameObject.activeSelf)
+            LevelManager.Instance.hand.gameObject.SetActive(false);
         AudioManager.instance.PlaySFX(SoundType.Nut_Out_Of_Screw);
         float yRotate = visual.eulerAngles.y;
         return visual.DOLocalRotate(new Vector3(0, yRotate + 360, 0), time, RotateMode.FastBeyond360)
