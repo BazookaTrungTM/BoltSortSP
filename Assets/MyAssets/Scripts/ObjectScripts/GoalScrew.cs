@@ -126,7 +126,6 @@ public class GoalScrew : MonoBehaviour
         if (index + 1 == size && !isRunEffCloseScrew)
         {
             isRunEffCloseScrew = true;
-
             Event_PlayScrewCloseEff();
         }
         Vector3 nutPos = new Vector3(0, index * delta, 0);

@@ -29,7 +29,10 @@ public class Screw : MonoBehaviour
     private static readonly WaitForSeconds waitEndFX = new WaitForSeconds(0.3f);
     private static readonly WaitForSeconds waitInit = new WaitForSeconds(0.3f);
     private List<Nut> listSortChange = new List<Nut>();
-
+    #region TMT code
+    Coroutine cIEInit;
+    Coroutine cFXRemoveSort;
+    #endregion TMT code
 
     public void InitNutsInside(ScrewData data, bool isNextLevel = false)
     {
@@ -44,7 +47,7 @@ public class Screw : MonoBehaviour
                 colorNut = ColorType.Pink;
             NutData nutData = new NutData()
             {
-                nutType = (NutType) int.Parse(values[0]),
+                nutType = (NutType)int.Parse(values[0]),
                 isHidden = int.Parse(values[1]) > 12,
                 color = (ColorType)(int.Parse(values[1]) > 12 ? int.Parse(values[1]) - 12 : int.Parse(values[1])),
                 bombCount = int.Parse(values[2]),
@@ -70,7 +73,7 @@ public class Screw : MonoBehaviour
             myNutsList[i].transform.localScale = Vector3.zero;
             myNutsList[i].transform.position = gate.position;
         }
-        StartCoroutine(IEInit());
+        cIEInit = StartCoroutine(IEInit());
     }
 
     IEnumerator IEInit()
@@ -79,7 +82,7 @@ public class Screw : MonoBehaviour
         yield return waitInit;
         for (int i = 0; i < myNutsList.Count; i++)
         {
-            yield return waitInit; 
+            yield return waitInit;
             myNutsList[i].transform.DOScale(1, 0.2f).OnComplete(() =>
             {
                 SortNutPos(myNutsList[i], i);
@@ -187,9 +190,9 @@ public class Screw : MonoBehaviour
                     if (glassBlockIndex.Count > 0 && i < glassBlockIndex[0])
                         break;
                     Nut item = myNutsList[i];
-                    if (amount > 0 && !item.data.isHidden && !item.data.isIce 
-                        && 
-                        item.data.color == lastNut_ScrewChange.data.color && item.data.nutType == lastNut_ScrewChange.data.nutType) 
+                    if (amount > 0 && !item.data.isHidden && !item.data.isIce
+                        &&
+                        item.data.color == lastNut_ScrewChange.data.color && item.data.nutType == lastNut_ScrewChange.data.nutType)
                     {
                         goal.ropeCount++;
                         if (item.connectedNut == null)
@@ -248,8 +251,10 @@ public class Screw : MonoBehaviour
         amountSortPre -= listNuts.Count;
         goal.amountSortPre += listNuts.Count;
 
-
-        StopAllCoroutines();
+        if (cIEInit != null)
+            StopCoroutine(cIEInit);
+        if (cFXRemoveSort != null)
+            StopCoroutine(cFXRemoveSort);
 
         BoosterController.Instance.AddUndoData(new UndoData()
         {
@@ -261,7 +266,7 @@ public class Screw : MonoBehaviour
 
         LevelManager.Instance.ChangeSpecialNutComponentInLevel();
         LevelManager.Instance.CheckBreakGlass();
-        StartCoroutine(FXRemoveSort(listNuts, goal));
+        cFXRemoveSort = StartCoroutine(FXRemoveSort(listNuts, goal));
 
         //if (listInfoUndos.Count > 0)
         //{
@@ -325,8 +330,8 @@ public class Screw : MonoBehaviour
         state = ScrewState.ACTION;
         nut.SortPos(new Vector3(0, index * delta, 0), null);
         sortPosTween?.Kill();
-        sortPosTween = DOVirtual.DelayedCall(0.4f, () => 
-        { 
+        sortPosTween = DOVirtual.DelayedCall(0.4f, () =>
+        {
             state = ScrewState.IDLE;
         });
     }
@@ -352,7 +357,7 @@ public class Screw : MonoBehaviour
     public void RemoveNut(Nut nut)
     {
         if (myNutsList.Contains(nut))
-            myNutsList.Remove(nut);       
+            myNutsList.Remove(nut);
     }
     public void ChangeSpecialNutComponents()
     {
@@ -380,7 +385,7 @@ public class Screw : MonoBehaviour
         {
             towelAnimator.gameObject.SetActive(true);
             towelColorSR.sprite = towelColorSprites[towelColor - 1];
-            this.towelColor = (ColorType) towelColor;
+            this.towelColor = (ColorType)towelColor;
             towelAnimator.SetTrigger("Root");
             towelAnimator.Rebind();
         }
@@ -399,8 +404,8 @@ public class Screw : MonoBehaviour
         towelAnimator.ResetTrigger("Complete");
         towelAnimator.CrossFade("Complete", 0f);
         towelAnimator.SetTrigger("Complete");
-        DOVirtual.DelayedCall(1.6f, () => 
-        { 
+        DOVirtual.DelayedCall(1.6f, () =>
+        {
             state = ScrewState.IDLE;
             //StartCoroutine(FadeOutBox());
             //towelColorSR.DOFade(0, 0.3f);
@@ -423,7 +428,7 @@ public class Screw : MonoBehaviour
                 // mat.SetShaderPassEnabled("DepthOnly", false);
                 // mat.SetShaderPassEnabled("SHADOWCASTER", true);
 
-              //  mat.SetOverrideTag("RenderType", "Transparent");
+                //  mat.SetOverrideTag("RenderType", "Transparent");
                 mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
                 mat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
 

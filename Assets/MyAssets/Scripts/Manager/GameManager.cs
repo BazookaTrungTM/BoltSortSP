@@ -42,7 +42,7 @@ public class GameManager : Singleton<GameManager>
     {
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !LevelManager.Instance.isEndGame)
         {
 
             //if (!CheckCanAction() && !IsTutShow)
@@ -105,6 +105,13 @@ public class GameManager : Singleton<GameManager>
     }
     public void SetWin()
     {
+        LevelManager.Instance.isEndGame = true;
+        LevelManager.Instance.countTimeSound.Stop();
+        foreach (var item in LevelManager.Instance.redlightList)
+        {
+            item.DOKill();
+            item.gameObject.SetActive(false);
+        }
         if (IsWin) return;
         IsWin = true;
         // Debug.LogError("WIN");
@@ -115,15 +122,18 @@ public class GameManager : Singleton<GameManager>
         {
             disableUI = false;
             UIManager.Instance.OpenWinPopUp();
-
-
-
         });
 
     }
-    public void SetLose()
+    public void SetLose(bool timeLose = false)
     {
         // Debug.LogError("sET LOSE");
+        LevelManager.Instance.isEndGame = true;
+        LevelManager.Instance.countTimeSound.Stop();
+        if (timeLose)
+            LevelManager.Instance.txtPopupLose.text = "Out of Time";
+        else
+            LevelManager.Instance.txtPopupLose.text = "No Moves Left";
         if (IsLose) return;
         IsLose = true;
         Debug.Log("LOSE");

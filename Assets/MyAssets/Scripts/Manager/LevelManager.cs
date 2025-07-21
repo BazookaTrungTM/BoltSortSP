@@ -3,6 +3,7 @@ using Do;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Newtonsoft.Json;
 using TMPro;
 using System.Linq;
@@ -640,7 +641,6 @@ public class LevelManager : Singleton<LevelManager>
     {
         bool isLose = true;
 
-
         // Debug.LogError(currentGoal.Count+ " CheckLoseLevel");
         for (int i = 0; i < currentGoal.Count; i++)
         {
@@ -1137,14 +1137,56 @@ public class LevelManager : Singleton<LevelManager>
     [Header("Hand Tut")]
     public Transform hand; // Bàn tay
     [SerializeField] Vector3 offsetHand;
-    [SerializeField] TMP_Text txtPopupLose;
+    public TMP_Text txtPopupLose;
+    [Header("Time Zone")]
+    [SerializeField] TMP_Text txtTimePlay;
+    [LunaPlaygroundField("Time Game Play", 30, "Game Settings")]
+    [SerializeField] float timePlay = 30;
+    [SerializeField] bool isRedlightTime;
+    public bool isStartGame;
+    public bool isEndGame;
+    public List<Image> redlightList = new List<Image>();
+    [SerializeField] float timeDeltaPlay = 1;
+    [SerializeField] float lastTimeDeltaPlay;
+    public AudioSource countTimeSound;
     void Start()
     {
         hand.DOScale(2.6f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
     }
     void Update()
     {
+        if (isEndGame) return;
         HandTut();
+        if (lastTimeDeltaPlay > 0)
+        {
+            lastTimeDeltaPlay -= Time.deltaTime;
+        }
+        if (lastTimeDeltaPlay <= 0 && isStartGame)
+        {
+            if (timePlay > 0)
+            {
+                timePlay--;
+                txtTimePlay.text = ConvertTime(timePlay);
+            }
+            else if (timePlay <= 0)
+            {
+                GameManager.Instance.SetLose(true);
+            }
+            if (timePlay <= 10 && !isRedlightTime)
+            {
+                isRedlightTime = true;
+                foreach (var item in redlightList)
+                {
+                    item.gameObject.SetActive(true);
+                    item.DOFade(0, 0.3f).SetLoops(-1, LoopType.Yoyo);
+                }
+            }
+            if (timePlay <= 10)
+            {
+                countTimeSound.Play();
+            }
+            lastTimeDeltaPlay = timeDeltaPlay;
+        }
     }
     public void ShowCompliment(Vector3 pos)
     {
@@ -1203,6 +1245,9 @@ public class LevelManager : Singleton<LevelManager>
         };
         txtPopupLose.fontMaterial = new Material(txtPopupLose.fontMaterial); // clone một instance riêng
         txtPopupLose.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.4f);
+        txtTimePlay.text = ConvertTime(timePlay);
+        txtTimePlay.fontMaterial = new Material(txtTimePlay.fontMaterial);
+        txtTimePlay.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0);
     }
     void HandTut()
     {
@@ -1226,6 +1271,13 @@ public class LevelManager : Singleton<LevelManager>
             }
         }
         return target;
+    }
+    string ConvertTime(float timeSecond)
+    {
+        string timeFormatted = string.Format("{0:00}:{1:00}",
+            Mathf.FloorToInt(timeSecond / 60),   // phút
+            Mathf.FloorToInt(timeSecond % 60));  // giây
+        return timeFormatted;
     }
     #endregion TMT code
 }

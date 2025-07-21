@@ -100,11 +100,6 @@ public class LunaManager : MonoBehaviour
         cameraUi.DOOrthoSize(target1 - 2f, 0.2f).SetEase(Ease.OutQuad);
     }
 
-
-
-
-
-
     public float GetOrthoSizeLandscape(float aspect)
     {
         // Mặc định: 16:9 → aspect ≈ 1.77, size ≈ 9.68
@@ -114,7 +109,6 @@ public class LunaManager : MonoBehaviour
 
     public void OnPlayButtonClick()
     {
-        Debug.Log("Play");
         Luna.Unity.Playable.InstallFullGame();
     }
     public void Btn_GameEnded()
