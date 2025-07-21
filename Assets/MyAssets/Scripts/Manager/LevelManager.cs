@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Newtonsoft.Json;
 using TMPro;
 using System.Linq;
+using Luna.Unity;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -1148,14 +1149,31 @@ public class LevelManager : Singleton<LevelManager>
     public List<Image> redlightList = new List<Image>();
     [SerializeField] float timeDeltaPlay = 1;
     [SerializeField] float lastTimeDeltaPlay;
-    public AudioSource countTimeSound;
+    [SerializeField] AudioSource countTime;
+    [Header("Booster Freeze")]
+    public bool isShowBtnFreeze;
+    public bool isFreezed;
+    [SerializeField] GameObject popupFreezeTut;
+    [SerializeField] Transform spriteFreezeTut;
+    [SerializeField] GameObject BtnUse;
+    [SerializeField] GameObject clickFreeze;
+    [SerializeField] ParticleSystem iceBurst;
+    [SerializeField] AudioSource getBoosterSound;
+    [SerializeField] AudioSource popupShowSound;
+    [SerializeField] GameObject blankFreeze;
+    [SerializeField] GameObject spriteFreezeTime;
+    [SerializeField] GameObject spriteNormalTime;
+    [SerializeField] GameObject borderFreeze;
+    [SerializeField] Transform spriteFreeze;
+    [SerializeField] GameObject spriteKhungFreezeDisable;
+    [SerializeField] Button btnFreeze;
     void Start()
     {
         hand.DOScale(2.6f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
     }
     void Update()
     {
-        if (isEndGame) return;
+        if (isFreezed || isShowBtnFreeze) return;
         HandTut();
         if (lastTimeDeltaPlay > 0)
         {
@@ -1181,10 +1199,10 @@ public class LevelManager : Singleton<LevelManager>
                     item.DOFade(0, 0.3f).SetLoops(-1, LoopType.Yoyo);
                 }
             }
+            if (timePlay <= 5)
+                ShowBoosterFreeze();
             if (timePlay <= 10)
-            {
-                countTimeSound.Play();
-            }
+                countTime.Play();
             lastTimeDeltaPlay = timeDeltaPlay;
         }
     }
@@ -1279,5 +1297,55 @@ public class LevelManager : Singleton<LevelManager>
             Mathf.FloorToInt(timeSecond % 60));  // giây
         return timeFormatted;
     }
+    #region show booster freeze
+    void ShowBoosterFreeze()
+    {
+        Analytics.LogEvent("Show Tut Booster", 0);
+        popupShowSound.Play();
+        Destroy(countTime.gameObject);
+        isShowBtnFreeze = true;
+        popupFreezeTut.SetActive(true);
+        spriteFreezeTut.DOScale(1, 0.5f).OnComplete(() =>
+        {
+            spriteFreezeTut.DORotate(new Vector3(0, 0, 5), .3f, RotateMode.LocalAxisAdd).SetLoops(-1, LoopType.Yoyo) // Lặp vô hạn kiểu lắc qua lại
+                .SetEase(Ease.InOutSine); // Mượt mà, không giật
+            BtnUse.transform.DOScale(1.08f, 0.2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+            Invoke(nameof(ShowBtnClickFreeze), 0.5f);
+        });
+    }
+    public void Btn_ActiveFreezeBooster()
+    {
+        Analytics.LogEvent("Active Booster", 0);
+        isFreezed = true;
+        foreach (var item in redlightList)
+        {
+            item.gameObject.SetActive(false);
+        }
+        getBoosterSound.Play();
+        iceBurst.Play();
+        blankFreeze.SetActive(false);
+        BtnUse.SetActive(false);
+        spriteNormalTime.SetActive(false);
+        spriteFreezeTime.SetActive(true);
+        borderFreeze.SetActive(true);
+        spriteFreezeTut.DOKill();
+        spriteFreezeTut.DOScale(0.2f, 0.5f);
+        btnFreeze.interactable = true;
+        spriteFreezeTut.DOMove(spriteFreeze.position, 0.5f).OnComplete(() =>
+        {
+            spriteKhungFreezeDisable.SetActive(false);
+            popupFreezeTut.SetActive(false);
+        });
+        Invoke(nameof(ContinuePlay), 0.2f);
+    }
+    void ShowBtnClickFreeze()
+    {
+        clickFreeze.SetActive(true);
+    }
+    void ContinuePlay()
+    {
+        isShowBtnFreeze = false;
+    }
+    #endregion show booster freeze
     #endregion TMT code
 }

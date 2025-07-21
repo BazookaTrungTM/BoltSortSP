@@ -40,9 +40,7 @@ public class GameManager : Singleton<GameManager>
     }
     void LateUpdate()
     {
-
-
-        if (Input.GetMouseButtonDown(0) && !LevelManager.Instance.isEndGame)
+        if (Input.GetMouseButtonDown(0) && !LevelManager.Instance.isShowBtnFreeze)
         {
 
             //if (!CheckCanAction() && !IsTutShow)
@@ -106,7 +104,6 @@ public class GameManager : Singleton<GameManager>
     public void SetWin()
     {
         LevelManager.Instance.isEndGame = true;
-        LevelManager.Instance.countTimeSound.Stop();
         foreach (var item in LevelManager.Instance.redlightList)
         {
             item.DOKill();
@@ -129,7 +126,6 @@ public class GameManager : Singleton<GameManager>
     {
         // Debug.LogError("sET LOSE");
         LevelManager.Instance.isEndGame = true;
-        LevelManager.Instance.countTimeSound.Stop();
         if (timeLose)
             LevelManager.Instance.txtPopupLose.text = "Out of Time";
         else
