@@ -18,11 +18,6 @@ public class GameManager : Singleton<GameManager>
     public bool disableUI = false;
     public bool IsTutShow = false;
     public List<GameObject> listOpenPopUp = new List<GameObject>();
-
-
-    public int level;
-    public int typeLevel;
-
     protected override void Awake()
     {
         base.Awake();
@@ -33,16 +28,16 @@ public class GameManager : Singleton<GameManager>
     }
     private void Start()
     {
-
         //  AudioManager.instance.PlaySFX(SoundType.BGM,isBGM: true);
         SetGameView();
         StartLevel();
     }
     void LateUpdate()
     {
-        if (Input.GetMouseButtonDown(0) && !LevelManager.Instance.isShowBtnFreeze)
+        if (LevelManager.Instance.isEndGame) return;
+        if (LevelManager.Instance.isShowBtnFreeze) return;
+        if (Input.GetMouseButtonDown(0))
         {
-
             //if (!CheckCanAction() && !IsTutShow)
             //if (!CheckCanAction())
             //{
@@ -104,6 +99,7 @@ public class GameManager : Singleton<GameManager>
     public void SetWin()
     {
         LevelManager.Instance.isEndGame = true;
+        LevelManager.Instance.countTime.Pause();
         foreach (var item in LevelManager.Instance.redlightList)
         {
             item.DOKill();
@@ -126,6 +122,7 @@ public class GameManager : Singleton<GameManager>
     {
         // Debug.LogError("sET LOSE");
         LevelManager.Instance.isEndGame = true;
+        LevelManager.Instance.countTime.Pause();
         if (timeLose)
             LevelManager.Instance.txtPopupLose.text = "Out of Time";
         else

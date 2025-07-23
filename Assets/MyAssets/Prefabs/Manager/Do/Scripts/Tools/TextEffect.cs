@@ -8,7 +8,7 @@ namespace Do
     {
         [SerializeField] private EffectManager effectManager;
         [SerializeField] private TextMeshProUGUI textMeshProUGUI;
-        
+
         public bool IsActive { get; private set; }
 
         public void ShowEffectText(string content, Vector3 position, int size, Callback complete, bool isNut)
@@ -17,6 +17,9 @@ namespace Do
             gameObject.SetActive(true);
             textMeshProUGUI.text = content;
             textMeshProUGUI.fontSize = size;
+            textMeshProUGUI.fontMaterial = new Material(textMeshProUGUI.fontMaterial);
+            textMeshProUGUI.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.4f);
+            textMeshProUGUI.fontMaterial.SetColor(ShaderUtilities.ID_OutlineColor, Color.white);
             if (isNut)
             {
 
@@ -33,7 +36,7 @@ namespace Do
             }
             else
             {
-                transform.position = new Vector3 (position.x, position.y + 2f, position.z - 1);
+                transform.position = new Vector3(position.x, position.y + 2f, position.z - 1);
                 position.y += 3f;
                 transform.DOMoveY(position.y, 0.75f).SetEase(Ease.OutSine).OnComplete(delegate
                 {

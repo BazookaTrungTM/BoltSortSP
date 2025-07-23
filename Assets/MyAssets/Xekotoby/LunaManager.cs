@@ -8,10 +8,7 @@ using UnityEngine.UI;
 
 public class LunaManager : MonoBehaviour
 {
-
     public static LunaManager instace;
-
-
     public Camera cameraGameplay;
     public Camera cameraUi;
     public GameObject bg;
@@ -44,10 +41,9 @@ public class LunaManager : MonoBehaviour
     public void CheckAndApplyOrientation()
     {
         screenAspect = (float)Screen.width / (float)Screen.height;
-        if (screenAspect < 0.65f)
+        if (screenAspect < 0.55f)
         {
-            // Debug.LogError("CheckAndApplyOrientation");
-            ZoomInCamera(14.5f);
+            ZoomInCamera(14);
             LevelManager.Instance.UpdateScrew(false);
             LevelManager.Instance.UpdateScrewHolder(false);
             canvasScaler.matchWidthOrHeight = 0;
@@ -55,34 +51,45 @@ public class LunaManager : MonoBehaviour
             sizeBoxBooster.y = 540;
             boxBooster.sizeDelta = sizeBoxBooster;
         }
-        else if (screenAspect >= 0.65f && screenAspect < 0.85f)
+        if (screenAspect >= 0.55f && screenAspect < 0.65f)
         {
-            ZoomInCamera(17);
-            LevelManager.Instance.UpdateScrew(true);
-            LevelManager.Instance.UpdateScrewHolder(true);
+            // Debug.LogError("CheckAndApplyOrientation");
+            ZoomInCamera(12);
+            LevelManager.Instance.UpdateScrew(false);
+            LevelManager.Instance.UpdateScrewHolder(false);
+            canvasScaler.matchWidthOrHeight = 0;
+            Vector2 sizeBoxBooster = boxBooster.sizeDelta;
+            sizeBoxBooster.y = 540;
+            boxBooster.sizeDelta = sizeBoxBooster;
+        }
+        else if (screenAspect >= 0.65f && screenAspect < 0.8f)
+        {
+            ZoomInCamera(11);
+            LevelManager.Instance.UpdateScrew(false);
+            LevelManager.Instance.UpdateScrewHolder(false);
             canvasScaler.matchWidthOrHeight = 1;
             Vector2 sizeBoxBooster = boxBooster.sizeDelta;
             sizeBoxBooster.y = 540;
             boxBooster.sizeDelta = sizeBoxBooster;
         }
-        else if (screenAspect >= 0.85f && screenAspect < 1)
+        else if (screenAspect >= 0.80f && screenAspect < 1)
         {
-            ZoomInCamera(13);
-            LevelManager.Instance.UpdateScrew(true);
-            LevelManager.Instance.UpdateScrewHolder(true);
+            ZoomInCamera(11);
+            LevelManager.Instance.UpdateScrew(false);
+            LevelManager.Instance.UpdateScrewHolder(false);
             canvasScaler.matchWidthOrHeight = 1;
             Vector2 sizeBoxBooster = boxBooster.sizeDelta;
-            sizeBoxBooster.y = 260;
+            sizeBoxBooster.y = 540;
             boxBooster.sizeDelta = sizeBoxBooster;
         }
         else if (screenAspect >= 1)
         {
             ZoomInCamera(11);
-            LevelManager.Instance.UpdateScrew(true);
-            LevelManager.Instance.UpdateScrewHolder(true);
+            LevelManager.Instance.UpdateScrew(false);
+            LevelManager.Instance.UpdateScrewHolder(false);
             canvasScaler.matchWidthOrHeight = 1;
             Vector2 sizeBoxBooster = boxBooster.sizeDelta;
-            sizeBoxBooster.y = 260;
+            sizeBoxBooster.y = 540;
             boxBooster.sizeDelta = sizeBoxBooster;
         }
     }
@@ -121,7 +128,6 @@ public class LunaManager : MonoBehaviour
         Luna.Unity.LifeCycle.OnResume -= ResumeGameplay;
     }
 
-
     private void ResumeGameplay()
     {
         Time.timeScale = 1f;
@@ -131,7 +137,4 @@ public class LunaManager : MonoBehaviour
     {
         Time.timeScale = 0;
     }
-
-
-
 }

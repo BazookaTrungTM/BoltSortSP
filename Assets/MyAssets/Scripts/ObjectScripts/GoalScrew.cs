@@ -32,11 +32,16 @@ public class GoalScrew : MonoBehaviour
     private int _baseColor = Shader.PropertyToID("_BaseColor");
     // private int _metalic = Shader.PropertyToID("_Metallic");
     // private int _smoothness = Shader.PropertyToID("_Smoothness");
+    [SerializeField] float posX;
     void OnEnable()
     {
         isRunEffCloseScrew = false;
     }
-
+    void Start()
+    {
+        posX = transform.localPosition.x;
+        transform.localPosition = new Vector3(posX, 0, 0);
+    }
     public void Init(bool isRecycle)
     {
         myNutsList.Clear();
@@ -51,7 +56,6 @@ public class GoalScrew : MonoBehaviour
         else
         {
             animator.enabled = false;
-
         }
 
         //AnimOpen();
@@ -139,6 +143,7 @@ public class GoalScrew : MonoBehaviour
             // Debug.LogError("SortNutPos");
             CheckDoneGoal(index);
         });
+        LevelManager.Instance.Action_MoveProcess();
     }
 
     public bool isFirst = false;
@@ -173,7 +178,6 @@ public class GoalScrew : MonoBehaviour
                     // Debug.LogError("CheckDoneGoal7");
                     //  VibrationUtil.Vibrate(50);
                 });
-
             }
             else
             {
@@ -193,7 +197,6 @@ public class GoalScrew : MonoBehaviour
                     LevelManager.Instance.ReInitGoal(index, pos);
                     Dispose();
                 });
-
             }
 
         }

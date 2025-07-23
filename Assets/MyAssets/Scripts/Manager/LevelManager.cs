@@ -335,7 +335,7 @@ public class LevelManager : Singleton<LevelManager>
             goalGradients[i].DOFade(120 / 255f, 0.5f);
             InitGoal(i, goalScrewPosDic[goalNum][i]);
             goalGradients[i].transform.localPosition = goalScrewPosDic[goalNum][i];
-            EffectManager.Instance.InitFillEffect(i, goalScrewPosDic[goalNum][i]);
+            // EffectManager.Instance.InitFillEffect(i, goalScrewPosDic[goalNum][i]);
         }
 
         UpdateScrewHolder(Screen.width > Screen.height);
@@ -349,6 +349,7 @@ public class LevelManager : Singleton<LevelManager>
         ColorType color = (ColorType)(colorKey - (int)type * 12);
         GoalScrew goal = Factory.Instance.GetGoalScrewBySize(type, goalScrewParent);
         goal.index = index;
+        pos.z = 0;
         goal.transform.localPosition = pos;
         goal.color = color;
         goal.initColor = color;
@@ -729,12 +730,6 @@ public class LevelManager : Singleton<LevelManager>
             if (screw.state == ScrewState.IDLE || screw.state == ScrewState.ACTION)
                 return;
         }
-
-
-
-
-
-
 
         GameManager.Instance.SetWin();
         return;
@@ -1123,11 +1118,18 @@ public class LevelManager : Singleton<LevelManager>
     }
     #endregion
     #region TMT code
+    [LunaPlaygroundField("test 1", 1, "Game Settings")]
+    int test1;
+    [LunaPlaygroundField("test 2", 1, "Game Settings")]
+    int test2;
     public List<ParticleSystem> screwCloseEffect;
     public List<FXHolderCellComplete> fxScrewCloseEffect;
-    [SerializeField] TMP_Text complimentText;
+    [SerializeField] TMP_Text complimentTextPrefab;
+    [SerializeField] Transform complimentTextParent;
+    [SerializeField] List<TMP_Text> complimentTextPool = new List<TMP_Text>(); // Pool chứa clone
     List<string> textTmp = new List<string>();
     [SerializeField] Vector3 offsetPos;
+    [SerializeField] TMP_Text txtNoSpace;
     [Header("Wow Sound")]
     Dictionary<string, AudioSource> complimentTextSounds = new Dictionary<string, AudioSource>();
     [SerializeField] AudioSource femaleExcellentSound;
@@ -1140,17 +1142,21 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] Vector3 offsetHand;
     public TMP_Text txtPopupLose;
     [Header("Time Zone")]
-    [SerializeField] TMP_Text txtTimePlay;
     [LunaPlaygroundField("Time Game Play", 30, "Game Settings")]
     [SerializeField] float timePlay = 30;
+    [SerializeField] bool isTimer;
+    [SerializeField] GameObject boxTimer;
+    [SerializeField] TMP_Text txtTimePlay;
     [SerializeField] bool isRedlightTime;
     public bool isStartGame;
     public bool isEndGame;
     public List<Image> redlightList = new List<Image>();
     [SerializeField] float timeDeltaPlay = 1;
     [SerializeField] float lastTimeDeltaPlay;
-    [SerializeField] AudioSource countTime;
+    public AudioSource countTime;
     [Header("Booster Freeze")]
+    [SerializeField] bool isHasBooster;
+    [SerializeField] GameObject boxBtnBooster;
     public bool isShowBtnFreeze;
     public bool isFreezed;
     [SerializeField] GameObject popupFreezeTut;
@@ -1167,14 +1173,29 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] Transform spriteFreeze;
     [SerializeField] GameObject spriteKhungFreezeDisable;
     [SerializeField] Button btnFreeze;
+    [Header("Top Text")]
+    [SerializeField] TMP_Text txtAttention;
+    [Header("Test IQ")]
+    [SerializeField] Transform owl;
+    [SerializeField] Transform einstein;
+    [SerializeField] float disPercent;
+    [SerializeField] float disPerNeedMove;
     void Start()
     {
+        txtAttention.transform.DOScale(1.1f, 0.8f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InSine);
         hand.DOScale(2.6f, 0.5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
+        boxTimer.SetActive(isTimer);
+        boxBtnBooster.SetActive(isHasBooster);
+        float totalStepIQ = einstein.transform.localPosition.x - owl.transform.localPosition.x;
+        disPercent = totalStepIQ / (screwsInScene.Count * screwsInScene[0].myNutsList.Count);
+        disPerNeedMove = owl.transform.localPosition.x;
     }
     void Update()
     {
-        if (isFreezed || isShowBtnFreeze) return;
         HandTut();
+        if (!isTimer) return;
+        if (isEndGame) return;
+        if (isFreezed || isShowBtnFreeze) return;
         if (lastTimeDeltaPlay > 0)
         {
             lastTimeDeltaPlay -= Time.deltaTime;
@@ -1199,7 +1220,7 @@ public class LevelManager : Singleton<LevelManager>
                     item.DOFade(0, 0.3f).SetLoops(-1, LoopType.Yoyo);
                 }
             }
-            if (timePlay <= 5)
+            if (timePlay <= 5 && isHasBooster)
                 ShowBoosterFreeze();
             if (timePlay <= 10)
                 countTime.Play();
@@ -1210,49 +1231,53 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (complimentTextSounds.Count == 0) return;
 
-        // Lấy danh sách key (các câu khen) từ dictionary
         List<string> keys = complimentTextSounds.Keys.ToList();
 
-        // Khởi tạo lại nếu đã dùng hết
         if (textTmp.Count <= 0)
             textTmp = keys.ToList();
 
         int intRandom = Random.Range(0, textTmp.Count);
         string randomText = textTmp[intRandom];
-        complimentText.text = randomText;
-        complimentText.gameObject.SetActive(true);
 
-        // Phát âm thanh nếu có
+        // Clone từ prefab
+        TMP_Text clone = Instantiate(complimentTextPrefab, complimentTextParent);
+        clone.text = randomText;
+        clone.gameObject.SetActive(true);
+
+        // Add vào pool nếu cần quản lý tái sử dụng sau này
+        complimentTextPool.Add(clone);
+
+        // Play sound nếu có
         if (complimentTextSounds.TryGetValue(randomText, out AudioSource sound) && sound != null)
         {
             sound.Play();
         }
 
-        // Reset to original state
-        complimentText.transform.localPosition = pos + offsetPos;
-        complimentText.transform.localScale = Vector3.zero;
-        complimentText.color = new Color(1, 1, 1, 1); // full opacity
-        complimentText.DOKill();
+        // Setup vị trí, scale, alpha
+        clone.DOKill();
+        clone.transform.localPosition = pos + offsetPos;
+        clone.transform.localScale = Vector3.zero;
+        clone.color = new Color(1, 1, 1, 1);
 
-        // Pop scale animation
-        complimentText.transform.DOScale(1.2f, 0.2f)
+        // Animation scale pop
+        clone.transform.DOScale(1.2f, 0.2f)
             .SetEase(Ease.OutBack)
-            .OnComplete(() => complimentText.transform.DOScale(1f, 0.1f));
+            .OnComplete(() => clone.transform.DOScale(1f, 0.1f));
 
-        // Move up animation
-        complimentText.transform
-            .DOMoveY(complimentText.transform.position.y + 3f, 1f)
+        // Move lên
+        clone.transform.DOMoveY(clone.transform.position.y + 3f, 1f)
             .SetEase(Ease.OutCubic);
 
-        // Fade out animation
-        complimentText.DOFade(0f, 1f)
+        // Fade out & deactivate clone
+        clone.DOFade(0f, 1f)
             .SetDelay(0.5f)
-            .OnComplete(() => complimentText.gameObject.SetActive(false));
+            .OnComplete(() => clone.gameObject.SetActive(false));
 
         textTmp.RemoveAt(intRandom);
     }
     void InitWowSoudList()
     {
+        Analytics.LogEvent("Start Game", 0);
         complimentTextSounds = new Dictionary<string, AudioSource>()
         {
             {"Excellent!", femaleExcellentSound},
@@ -1266,6 +1291,8 @@ public class LevelManager : Singleton<LevelManager>
         txtTimePlay.text = ConvertTime(timePlay);
         txtTimePlay.fontMaterial = new Material(txtTimePlay.fontMaterial);
         txtTimePlay.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0);
+        txtAttention.fontMaterial = new Material(txtAttention.fontMaterial);
+        txtAttention.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.3f);
     }
     void HandTut()
     {
@@ -1283,10 +1310,7 @@ public class LevelManager : Singleton<LevelManager>
         Transform target = null;
         foreach (var screwItem in screwsInScene)
         {
-            if (screwItem.myNutsList[screwItem.myNutsList.Count - 1].data.color == ColorType.Blue)
-            {
-                return screwItem.myNutsList[screwItem.myNutsList.Count - 1].transform;
-            }
+            return screwItem.transform;
         }
         return target;
     }
@@ -1310,7 +1334,7 @@ public class LevelManager : Singleton<LevelManager>
             spriteFreezeTut.DORotate(new Vector3(0, 0, 5), .3f, RotateMode.LocalAxisAdd).SetLoops(-1, LoopType.Yoyo) // Lặp vô hạn kiểu lắc qua lại
                 .SetEase(Ease.InOutSine); // Mượt mà, không giật
             BtnUse.transform.DOScale(1.08f, 0.2f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
-            Invoke(nameof(ShowBtnClickFreeze), 0.5f);
+            Invoke(nameof(ShowBtnClickFreeze), 0.4f);
         });
     }
     public void Btn_ActiveFreezeBooster()
@@ -1347,5 +1371,10 @@ public class LevelManager : Singleton<LevelManager>
         isShowBtnFreeze = false;
     }
     #endregion show booster freeze
+    public void Action_MoveProcess()
+    {
+        disPerNeedMove += disPercent;
+        owl.DOLocalMoveX(disPerNeedMove, 0.5f);
+    }
     #endregion TMT code
 }

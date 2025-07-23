@@ -91,6 +91,7 @@ public class Nut : MonoBehaviour
     }
     private void InitColor(ColorType color)
     {
+        Debug.Log("=><color=Fuchsia>" + "InitColor" + "</color>");
         //colorRenderer.materials[0] = Factory.Instance.GetNutMaterial(color);
         colorRenderer.materials[0].DOFloat(Factory.Instance.GetMetalicNut(color), _metalic, 0f);
         colorRenderer.materials[0].DOFloat(Factory.Instance.GetSmoothnessNut(color), _smoothness, 0f);
