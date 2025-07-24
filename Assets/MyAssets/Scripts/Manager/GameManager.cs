@@ -107,9 +107,6 @@ public class GameManager : Singleton<GameManager>
         }
         if (IsWin) return;
         IsWin = true;
-        // Debug.LogError("WIN");
-
-
         disableUI = true;
         DOVirtual.DelayedCall(1f, () =>
         {

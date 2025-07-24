@@ -1118,10 +1118,6 @@ public class LevelManager : Singleton<LevelManager>
     }
     #endregion
     #region TMT code
-    [LunaPlaygroundField("test 1", 1, "Game Settings")]
-    int test1;
-    [LunaPlaygroundField("test 2", 1, "Game Settings")]
-    int test2;
     public List<ParticleSystem> screwCloseEffect;
     public List<FXHolderCellComplete> fxScrewCloseEffect;
     [SerializeField] TMP_Text complimentTextPrefab;
@@ -1142,9 +1138,10 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] Vector3 offsetHand;
     public TMP_Text txtPopupLose;
     [Header("Time Zone")]
+    [LunaPlaygroundField("Time On Off", 1, "Game Settings")]
+    public bool isTimer;
     [LunaPlaygroundField("Time Game Play", 30, "Game Settings")]
     [SerializeField] float timePlay = 30;
-    [SerializeField] bool isTimer;
     [SerializeField] GameObject boxTimer;
     [SerializeField] TMP_Text txtTimePlay;
     [SerializeField] bool isRedlightTime;
@@ -1155,7 +1152,8 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] float lastTimeDeltaPlay;
     public AudioSource countTime;
     [Header("Booster Freeze")]
-    [SerializeField] bool isHasBooster;
+    [LunaPlaygroundField("Booster On Off", 1, "Game Settings")]
+    public bool isHasBooster;
     [SerializeField] GameObject boxBtnBooster;
     public bool isShowBtnFreeze;
     public bool isFreezed;
@@ -1326,7 +1324,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         Analytics.LogEvent("Show Tut Booster", 0);
         popupShowSound.Play();
-        Destroy(countTime.gameObject);
+        countTime.volume = 0;
         isShowBtnFreeze = true;
         popupFreezeTut.SetActive(true);
         spriteFreezeTut.DOScale(1, 0.5f).OnComplete(() =>

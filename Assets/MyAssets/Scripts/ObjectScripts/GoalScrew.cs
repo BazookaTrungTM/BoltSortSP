@@ -140,7 +140,6 @@ public class GoalScrew : MonoBehaviour
             else
                 EffectManager.Instance.PlayNutSpecialEffect(nut.transform.position);
 
-            // Debug.LogError("SortNutPos");
             CheckDoneGoal(index);
         });
         LevelManager.Instance.Action_MoveProcess();
@@ -156,14 +155,9 @@ public class GoalScrew : MonoBehaviour
                 DOVirtual.DelayedCall(0.37f, () =>
                 {
                     LevelManager.Instance.CheckOpenTowel(color);
-                    // Debug.LogError("CheckDoneGoal1");
                     LevelManager.Instance.CheckWinLevel();
-                    // Debug.LogError("CheckDoneGoal2");
                     Vector3 pos = transform.localPosition;
-                    // Debug.LogError("CheckDoneGoal3");
                     BoosterController.Instance.RemoveUndoData(this);
-                    // Debug.LogError("CheckDoneGoal4");
-                    // Debug.LogError("CheckDoneGoal5");
 
                     DOVirtual.DelayedCall(0.01f, () =>
                     {
