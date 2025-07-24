@@ -1168,6 +1168,10 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] GameObject spriteFreezeTime;
     [SerializeField] GameObject spriteNormalTime;
     [SerializeField] GameObject borderFreeze;
+    [SerializeField] RectTransform borderFreezeTop;
+    [SerializeField] RectTransform borderFreezeBot;
+    [SerializeField] RectTransform borderFreezeLeft;
+    [SerializeField] RectTransform borderFreezeRight;
     [SerializeField] Transform spriteFreeze;
     [SerializeField] GameObject spriteKhungFreezeDisable;
     [SerializeField] Button btnFreeze;
@@ -1187,6 +1191,14 @@ public class LevelManager : Singleton<LevelManager>
         float totalStepIQ = einstein.transform.localPosition.x - owl.transform.localPosition.x;
         disPercent = totalStepIQ / (screwsInScene.Count * screwsInScene[0].myNutsList.Count);
         disPerNeedMove = owl.transform.localPosition.x;
+
+        txtPopupLose.fontMaterial = new Material(txtPopupLose.fontMaterial); // clone một instance riêng
+        txtPopupLose.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.4f);
+        txtTimePlay.text = ConvertTime(timePlay);
+        txtTimePlay.fontMaterial = new Material(txtTimePlay.fontMaterial);
+        txtTimePlay.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0);
+        txtAttention.fontMaterial = new Material(txtAttention.fontMaterial);
+        txtAttention.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.3f);
     }
     void Update()
     {
@@ -1284,13 +1296,6 @@ public class LevelManager : Singleton<LevelManager>
             {"Fantastic!", maleFantasticSound},
             {"Good Job!", maleGoodJobSound},
         };
-        txtPopupLose.fontMaterial = new Material(txtPopupLose.fontMaterial); // clone một instance riêng
-        txtPopupLose.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.4f);
-        txtTimePlay.text = ConvertTime(timePlay);
-        txtTimePlay.fontMaterial = new Material(txtTimePlay.fontMaterial);
-        txtTimePlay.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0);
-        txtAttention.fontMaterial = new Material(txtAttention.fontMaterial);
-        txtAttention.fontMaterial.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.3f);
     }
     void HandTut()
     {
@@ -1358,6 +1363,7 @@ public class LevelManager : Singleton<LevelManager>
             spriteKhungFreezeDisable.SetActive(false);
             popupFreezeTut.SetActive(false);
         });
+        CallFillImgFreeze();
         Invoke(nameof(ContinuePlay), 0.2f);
     }
     void ShowBtnClickFreeze()
@@ -1373,6 +1379,51 @@ public class LevelManager : Singleton<LevelManager>
     {
         disPerNeedMove += disPercent;
         owl.DOLocalMoveX(disPerNeedMove, 0.5f);
+    }
+    public void CallFillImgFreeze()
+    {
+        if (!isFreezed) return;
+        ObjCloneFollowScreen(borderFreezeTop);
+        ObjCloneFollowScreen(borderFreezeBot);
+        ObjCloneFollowScreen(borderFreezeLeft, false);
+        ObjCloneFollowScreen(borderFreezeRight, false);
+    }
+    void ObjCloneFollowScreen(RectTransform targetUI, bool fillHorizontally = true, float spacing = 0f)
+    {
+        if (targetUI == null || targetUI.parent == null) return;
+
+        RectTransform parentRect = targetUI.parent as RectTransform;
+
+        float screenSize = fillHorizontally ? parentRect.rect.width : parentRect.rect.height;
+        float objSize = fillHorizontally ? targetUI.rect.width : targetUI.rect.height;
+
+        if (objSize <= 0) return;
+
+        int neededCount = Mathf.CeilToInt(screenSize / (objSize + spacing));
+
+        // Đếm số lượng đã có (bao gồm cả bản gốc)
+        int currentCount = 0;
+        foreach (Transform child in targetUI.parent)
+        {
+            if (child.name.StartsWith(targetUI.name)) currentCount++;
+        }
+
+        int cloneToAdd = neededCount - currentCount;
+        if (cloneToAdd <= 0) return; // Đã đủ -> không cần clone thêm
+
+        Vector3 startPos = targetUI.localPosition;
+
+        for (int i = currentCount; i < neededCount; i++)
+        {
+            RectTransform clone = GameObject.Instantiate(targetUI, targetUI.parent);
+            clone.name = targetUI.name + "_Clone" + i;
+
+            Vector3 offset = fillHorizontally
+                ? Vector3.right * (objSize + spacing) * i
+                : Vector3.down * (objSize + spacing) * i;
+
+            clone.localPosition = startPos + offset;
+        }
     }
     #endregion TMT code
 }

@@ -68,6 +68,7 @@ public class LunaManager : MonoBehaviour
         {
             ChangeObjWithCam(posTimer2, posIQ2, levelManager.isHasBooster ? 13.8f : 11, levelManager.isHasBooster ? -0.8f : -2.8f, 1);
         }
+        levelManager.CallFillImgFreeze();
     }
 
     void ChangeObjWithCam(RectTransform targetRect, RectTransform targetRectIQ, float camSize = 14, float objGamePosY = -3.5f, int match = 0)

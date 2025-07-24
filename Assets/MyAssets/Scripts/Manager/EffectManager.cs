@@ -51,8 +51,9 @@ public class EffectManager : Singleton<EffectManager>
         if (isLocal)
         {
             Vector3 screenPos = mainCamera.WorldToScreenPoint(position);
+#if UNITY_EDITOR
             Debug.Log(screenPos);
-
+#endif
             Vector2 uiPos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasTextEffect.GetComponent<RectTransform>(),
