@@ -54,19 +54,19 @@ public class LunaManager : MonoBehaviour
         screenAspect = (float)Screen.width / (float)Screen.height;
         if (screenAspect < 0.55f)
         {
-            ChangeObjWithCam(posTimer1, posIQ1, levelManager.isHasBooster ? 15.5f : 14, levelManager.isHasBooster ? -1.5f : -3.5f);
+            ChangeObjWithCam(posTimer1, posIQ1, 14, levelManager.isHasBooster ? 0 : -0.5f);
         }
         if (screenAspect >= 0.55f && screenAspect < 0.65f)
         {
-            ChangeObjWithCam(posTimer1, posIQ1, levelManager.isHasBooster ? 16.5f : 13, levelManager.isHasBooster ? -1.5f : -3.5f);
+            ChangeObjWithCam(posTimer1, posIQ1, 14, levelManager.isHasBooster ? 0 : -0.5f);
         }
         else if (screenAspect >= 0.65f && screenAspect < 0.8f)
         {
-            ChangeObjWithCam(posTimer1, posIQ1, levelManager.isHasBooster ? 14.8f : 12, levelManager.isHasBooster ? -1.5f : -3.5f, 1);
+            ChangeObjWithCam(posTimer1, posIQ1, levelManager.isHasBooster ? 13 : 12, levelManager.isHasBooster ? 0 : -0.5f, 1);
         }
         else if (screenAspect >= 0.80f)
         {
-            ChangeObjWithCam(posTimer2, posIQ2, levelManager.isHasBooster ? 13.8f : 11, levelManager.isHasBooster ? -0.8f : -2.8f, 1);
+            ChangeObjWithCam(posTimer2, posIQ2, levelManager.isHasBooster ? 12 : 10.5f, levelManager.isHasBooster ? 1 : -1, 1);
         }
         levelManager.CallFillImgFreeze();
     }
